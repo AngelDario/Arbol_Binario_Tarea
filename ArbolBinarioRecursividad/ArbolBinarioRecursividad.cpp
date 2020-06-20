@@ -6,13 +6,13 @@ using namespace std;
 
 struct Cgreater {
 	inline bool operator()(int a, int b) {
-		return a < b;
+		return a > b;
 	}
 };
 
 struct Cless {
 	inline bool operator()(int a, int b) {
-		return a > b;
+		return a < b;
 	}
 };
 
@@ -115,6 +115,13 @@ public:
 		cout << k->val << "->";
 	}
 
+	void reverse(NODE<T>* k) {
+		if (!k) return;
+		reverse(k->nodes[1]);
+		cout << k->val << "->";
+		reverse(k->nodes[0]);
+	}
+
 };
 
 template<class T, class O> 
@@ -122,13 +129,24 @@ void print(int& x, CTREE<T, O> arbol) {
 
 	switch (x) {
 	case 1:
+		cout << "Inorder: \n";
 		arbol.inorder(arbol.m_root);
+		cout << endl;
 		break;
 	case 2:
+		cout << "Preorder: \n";
 		arbol.pre_order(arbol.m_root);
+		cout << endl;
 		break;
 	case 3:
+		cout << "Postorder: \n";
 		arbol.post_order(arbol.m_root);
+		cout << endl;
+		break;
+	case 4:
+		cout << "Reverse: \n";
+		arbol.reverse(arbol.m_root);
+		cout << endl;
 		break;
 	}
 
@@ -143,6 +161,7 @@ void menu(CTREE<T, O>& arbol) {
 	cout << "1. Inorder \n";
 	cout << "2. Preorder \n";
 	cout << "3. Postorder \n";
+	cout << "4. Reverse \n";
 	cin >> orden;
 
 	while (1) {
@@ -152,6 +171,7 @@ void menu(CTREE<T, O>& arbol) {
 		cout << "1. Add \n";
 		cout << "2. Del \n";
 		cout << "3. Cambiar tipo de recorrido\n";
+		cout << "4. Salir del Programa\n";
 		cin >> x;
 
 		switch (x) {
@@ -172,8 +192,13 @@ void menu(CTREE<T, O>& arbol) {
 			cout << "1. Inorder \n";
 			cout << "2. Preorder \n";
 			cout << "3. Postorder \n";
+			cout << "4. Reverse \n";
 			cin >> orden;
 			continue;
+		case 4:
+			arbol.destruir(arbol.m_root);
+			cout << "Arbol Destruido.";
+			exit(0);
 		}
 	}
 }
