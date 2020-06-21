@@ -60,7 +60,7 @@ public:
 		return 1;
 	}
 
-	bool REP(NODE<T>**& p) {
+	NODE<T>** REP(NODE<T>** p) {
 		srand(time(NULL));
 		bool random = rand() % 2;
 		if ((*p)->nodes[random]) {
@@ -68,23 +68,22 @@ public:
 			while ((*p)->nodes[!random]) {
 				p = &((*p)->nodes[!random]);
 			}
-			return 1;
+			return p;
 		}
 		p = &((*p)->nodes[!random]);
 		while ((*p)->nodes[random]) {
 			p = &((*p)->nodes[random]);
 		}
-		return 1;
+		return p;
 	}
 
-	bool remove(T x) {
+	bool remove(int x) {
 		NODE<T>** p;
 		if (!find(x, p)) {
 			return 0;
 		}
 		if ((*p)->nodes[0] && (*p)->nodes[1]) {
-			NODE<T>** q;
-			REP(q);
+			NODE<T>** q = REP(p);
 			(*p)->val = (*q)->val;
 			p = q;
 		}
