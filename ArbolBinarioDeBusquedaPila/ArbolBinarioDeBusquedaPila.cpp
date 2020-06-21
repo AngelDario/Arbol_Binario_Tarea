@@ -21,7 +21,7 @@ class STACK {
 public:
 	int size, top;
 	T* PILA;
-
+	
 	STACK(int _size) : size(_size) {
 		top = -1;
 		PILA = new T[size];
@@ -32,18 +32,23 @@ public:
 	}
 
 	void p_push(T x) {
-		if (top < size + 1) {
-			PILA[++top] = x;
+		if (top < (size - 1)) {
+			++top;
+			PILA[top] = x;
 			return;
 		}
-		cout << "Stack overflow: El stack es de "<<size<<" elementos";
+		cout << "Stack overflow: El stack es de " << size << " elementos";
 		exit(0);
 	}
 
-	void p_pop(T x) {
+	void p_pop() {
 		if (top > -1) {
 			--top;
 		}
+	}
+
+	T TOP() {
+		return PILA[top];
 	}
 };
 
@@ -57,13 +62,29 @@ struct NODE {
 	}
 };
 
-template<class T>
+template<class l>
 struct nodeX {
 	int estado;
-	NODE<T>* x;
+	NODE<l>* x;
 
-	nodeX(int _estado, NODE<T>* n) : estado(_estado) {
+	nodeX() {}
+
+	nodeX(NODE<l>* n) {
+		estado = 0;
 		x = n;
+	}
+
+	void update(NODE<l>* newNODE) {
+		estado = 0;
+		x = newNODE;
+	}
+
+	void cambio() {
+		++estado;
+	}
+
+	void print() {
+		cout << x->val;
 	}
 };
 
@@ -136,31 +157,134 @@ public:
 		return 1;
 	}
 
-	void inorder(NODE<T>* k) {
-		STACK<nodeX<T>> pila(100);
-		nodeX<T> h(0, m_root);
-		pila.p_push(h);
+	void inorder() {
+		STACK<nodeX<T>> lista(100);
+		NODE<T>* k = m_root;
+		nodeX<T> i(k);
+
+		lista.p_push(i);
+
+		while (lista.top != -1) {
+
+			if (lista.TOP().estado == 0) {
+				lista.PILA[lista.top].estado++;
+				i.update(lista.TOP().x->nodes[0]);
+				lista.p_push(i);
+				if (!(lista.TOP().x)) {
+					lista.p_pop();
+				}
+			}else if (lista.TOP().estado == 1) {
+				lista.PILA[lista.top].estado++;
+				cout << lista.TOP().x->val;
+				i.update(lista.TOP().x->nodes[1]);
+				lista.p_push(i);
+				if (!(lista.TOP().x)) {
+					lista.p_pop();
+				}
+			}else if (lista.TOP().estado == 2) {
+				lista.p_pop();
+			}
+			
+		}
 	}
 
-	void pre_order(NODE<T>* k) {
-		if (!k) return;
-		cout << k->val << "->";
-		pre_order(k->nodes[0]);
-		pre_order(k->nodes[1]);
+	void preorder() {
+		STACK<nodeX<T>> lista(100);
+		NODE<T>* k = m_root;
+		nodeX<T> i(k);
+
+		lista.p_push(i);
+
+		while (lista.top != -1) {
+
+			if (lista.TOP().estado == 0) {
+				lista.PILA[lista.top].estado++;
+				cout << lista.TOP().x->val;
+				i.update(lista.TOP().x->nodes[0]);
+				lista.p_push(i);
+				if (!(lista.TOP().x)) {
+					lista.p_pop();
+				}
+			}
+			else if (lista.TOP().estado == 1) {
+				lista.PILA[lista.top].estado++;
+				i.update(lista.TOP().x->nodes[1]);
+				lista.p_push(i);
+				if (!(lista.TOP().x)) {
+					lista.p_pop();
+				}
+			}
+			else if (lista.TOP().estado == 2) {
+				lista.p_pop();
+			}
+
+		}
 	}
 
-	void post_order(NODE<T>* k) {
-		if (!k) return;
-		post_order(k->nodes[0]);
-		post_order(k->nodes[1]);
-		cout << k->val << "->";
+	void postorder() {
+		STACK<nodeX<T>> lista(100);
+		NODE<T>* k = m_root;
+		nodeX<T> i(k);
+
+		lista.p_push(i);
+
+		while (lista.top != -1) {
+
+			if (lista.TOP().estado == 0) {
+				lista.PILA[lista.top].estado++;
+				i.update(lista.TOP().x->nodes[0]);
+				lista.p_push(i);
+				if (!(lista.TOP().x)) {
+					lista.p_pop();
+				}
+			}
+			else if (lista.TOP().estado == 1) {
+				lista.PILA[lista.top].estado++;
+				i.update(lista.TOP().x->nodes[1]);
+				lista.p_push(i);
+				if (!(lista.TOP().x)) {
+					lista.p_pop();
+				}
+			}
+			else if (lista.TOP().estado == 2) {
+				cout << lista.TOP().x->val;
+				lista.p_pop();
+			}
+
+		}
 	}
 
-	void reverse(NODE<T>* k) {
-		if (!k) return;
-		reverse(k->nodes[1]);
-		cout << k->val << "->";
-		reverse(k->nodes[0]);
+	void reverse() {
+		STACK<nodeX<T>> lista(100);
+		NODE<T>* k = m_root;
+		nodeX<T> i(k);
+
+		lista.p_push(i);
+
+		while (lista.top != -1) {
+
+			if (lista.TOP().estado == 0) {
+				lista.PILA[lista.top].estado++;
+				i.update(lista.TOP().x->nodes[1]);
+				lista.p_push(i);
+				if (!(lista.TOP().x)) {
+					lista.p_pop();
+				}
+			}
+			else if (lista.TOP().estado == 1) {
+				lista.PILA[lista.top].estado++;
+				cout << lista.TOP().x->val;
+				i.update(lista.TOP().x->nodes[0]);
+				lista.p_push(i);
+				if (!(lista.TOP().x)) {
+					lista.p_pop();
+				}
+			}
+			else if (lista.TOP().estado == 2) {
+				lista.p_pop();
+			}
+
+		}
 	}
 
 };
@@ -171,22 +295,22 @@ void print(int& x, CTREE<T, O> arbol) {
 	switch (x) {
 	case 1:
 		cout << "Inorder: \n";
-		arbol.inorder(arbol.m_root);
+		arbol.inorder();
 		cout << endl;
 		break;
 	case 2:
 		cout << "Preorder: \n";
-		arbol.pre_order(arbol.m_root);
+		arbol.preorder();
 		cout << endl;
 		break;
 	case 3:
 		cout << "Postorder: \n";
-		arbol.post_order(arbol.m_root);
+		arbol.postorder();
 		cout << endl;
 		break;
 	case 4:
 		cout << "Reverse: \n";
-		arbol.reverse(arbol.m_root);
+		arbol.reverse();
 		cout << endl;
 		break;
 	}
@@ -244,13 +368,10 @@ void menu(CTREE<T, O>& arbol) {
 	}
 }
 
-
-
 int main()
 {
 	CTREE<int, Cgreater> arbol;
 
 	menu<int, Cgreater>(arbol);
-
 	return 0;
 }
