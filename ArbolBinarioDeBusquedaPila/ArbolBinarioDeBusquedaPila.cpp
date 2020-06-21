@@ -123,7 +123,7 @@ public:
 		return 1;
 	}
 
-	bool REP(NODE<T>**& p) {
+	NODE<T>** REP(NODE<T>** p) {
 		srand(time(NULL));
 		bool random = rand() % 2;
 		if ((*p)->nodes[random]) {
@@ -131,13 +131,13 @@ public:
 			while ((*p)->nodes[!random]) {
 				p = &((*p)->nodes[!random]);
 			}
-			return 1;
+			return p;
 		}
 		p = &((*p)->nodes[!random]);
 		while ((*p)->nodes[random]) {
 			p = &((*p)->nodes[random]);
 		}
-		return 1;
+		return p;
 	}
 
 	bool remove(T x) {
@@ -146,8 +146,7 @@ public:
 			return 0;
 		}
 		if ((*p)->nodes[0] && (*p)->nodes[1]) {
-			NODE<T>** q;
-			REP(q);
+			NODE<T>** q = REP(p);
 			(*p)->val = (*q)->val;
 			p = q;
 		}
@@ -158,135 +157,143 @@ public:
 	}
 
 	void inorder() {
-		STACK<nodeX<T>> lista(100);
-		NODE<T>* k = m_root;
-		nodeX<T> i(k);
+		if (m_root) {
+			STACK<nodeX<T>> lista(100);
+			NODE<T>* k = m_root;
+			nodeX<T> i(k);
 
-		lista.p_push(i);
+			lista.p_push(i);
+			while (lista.top != -1) {
 
-		while (lista.top != -1) {
-
-			if (lista.TOP().estado == 0) {
-				lista.PILA[lista.top].estado++;
-				i.update(lista.TOP().x->nodes[0]);
-				lista.p_push(i);
-				if (!(lista.TOP().x)) {
+				if (lista.TOP().estado == 0) {
+					lista.PILA[lista.top].estado++;
+					i.update(lista.TOP().x->nodes[0]);
+					lista.p_push(i);
+					if (!(lista.TOP().x)) {
+						lista.p_pop();
+					}
+				}
+				else if (lista.TOP().estado == 1) {
+					lista.PILA[lista.top].estado++;
+					cout << lista.TOP().x->val << " -> ";
+					i.update(lista.TOP().x->nodes[1]);
+					lista.p_push(i);
+					if (!(lista.TOP().x)) {
+						lista.p_pop();
+					}
+				}
+				else if (lista.TOP().estado == 2) {
 					lista.p_pop();
 				}
-			}else if (lista.TOP().estado == 1) {
-				lista.PILA[lista.top].estado++;
-				cout << lista.TOP().x->val;
-				i.update(lista.TOP().x->nodes[1]);
-				lista.p_push(i);
-				if (!(lista.TOP().x)) {
-					lista.p_pop();
-				}
-			}else if (lista.TOP().estado == 2) {
-				lista.p_pop();
+
 			}
-			
 		}
 	}
 
 	void preorder() {
-		STACK<nodeX<T>> lista(100);
-		NODE<T>* k = m_root;
-		nodeX<T> i(k);
+		if (m_root) {
+			STACK<nodeX<T>> lista(100);
+			NODE<T>* k = m_root;
+			nodeX<T> i(k);
 
-		lista.p_push(i);
+			lista.p_push(i);
 
-		while (lista.top != -1) {
+			while (lista.top != -1) {
 
-			if (lista.TOP().estado == 0) {
-				lista.PILA[lista.top].estado++;
-				cout << lista.TOP().x->val;
-				i.update(lista.TOP().x->nodes[0]);
-				lista.p_push(i);
-				if (!(lista.TOP().x)) {
+				if (lista.TOP().estado == 0) {
+					lista.PILA[lista.top].estado++;
+					cout << lista.TOP().x->val << " -> ";
+					i.update(lista.TOP().x->nodes[0]);
+					lista.p_push(i);
+					if (!(lista.TOP().x)) {
+						lista.p_pop();
+					}
+				}
+				else if (lista.TOP().estado == 1) {
+					lista.PILA[lista.top].estado++;
+					i.update(lista.TOP().x->nodes[1]);
+					lista.p_push(i);
+					if (!(lista.TOP().x)) {
+						lista.p_pop();
+					}
+				}
+				else if (lista.TOP().estado == 2) {
 					lista.p_pop();
 				}
-			}
-			else if (lista.TOP().estado == 1) {
-				lista.PILA[lista.top].estado++;
-				i.update(lista.TOP().x->nodes[1]);
-				lista.p_push(i);
-				if (!(lista.TOP().x)) {
-					lista.p_pop();
-				}
-			}
-			else if (lista.TOP().estado == 2) {
-				lista.p_pop();
-			}
 
+			}
 		}
 	}
 
 	void postorder() {
-		STACK<nodeX<T>> lista(100);
-		NODE<T>* k = m_root;
-		nodeX<T> i(k);
+		if (m_root) {
+			STACK<nodeX<T>> lista(100);
+			NODE<T>* k = m_root;
+			nodeX<T> i(k);
 
-		lista.p_push(i);
+			lista.p_push(i);
+			while (lista.top != -1) {
 
-		while (lista.top != -1) {
-
-			if (lista.TOP().estado == 0) {
-				lista.PILA[lista.top].estado++;
-				i.update(lista.TOP().x->nodes[0]);
-				lista.p_push(i);
-				if (!(lista.TOP().x)) {
+				if (lista.TOP().estado == 0) {
+					lista.PILA[lista.top].estado++;
+					i.update(lista.TOP().x->nodes[0]);
+					lista.p_push(i);
+					if (!(lista.TOP().x)) {
+						lista.p_pop();
+					}
+				}
+				else if (lista.TOP().estado == 1) {
+					lista.PILA[lista.top].estado++;
+					i.update(lista.TOP().x->nodes[1]);
+					lista.p_push(i);
+					if (!(lista.TOP().x)) {
+						lista.p_pop();
+					}
+				}
+				else if (lista.TOP().estado == 2) {
+					cout << lista.TOP().x->val << " -> ";
 					lista.p_pop();
 				}
-			}
-			else if (lista.TOP().estado == 1) {
-				lista.PILA[lista.top].estado++;
-				i.update(lista.TOP().x->nodes[1]);
-				lista.p_push(i);
-				if (!(lista.TOP().x)) {
-					lista.p_pop();
-				}
-			}
-			else if (lista.TOP().estado == 2) {
-				cout << lista.TOP().x->val;
-				lista.p_pop();
-			}
 
+			}
 		}
 	}
 
 	void reverse() {
-		STACK<nodeX<T>> lista(100);
-		NODE<T>* k = m_root;
-		nodeX<T> i(k);
+		if (m_root) {
+			STACK<nodeX<T>> lista(100);
+			NODE<T>* k = m_root;
+			nodeX<T> i(k);
 
-		lista.p_push(i);
+			lista.p_push(i);
 
-		while (lista.top != -1) {
 
-			if (lista.TOP().estado == 0) {
-				lista.PILA[lista.top].estado++;
-				i.update(lista.TOP().x->nodes[1]);
-				lista.p_push(i);
-				if (!(lista.TOP().x)) {
+			while (lista.top != -1) {
+
+				if (lista.TOP().estado == 0) {
+					lista.PILA[lista.top].estado++;
+					i.update(lista.TOP().x->nodes[1]);
+					lista.p_push(i);
+					if (!(lista.TOP().x)) {
+						lista.p_pop();
+					}
+				}
+				else if (lista.TOP().estado == 1) {
+					lista.PILA[lista.top].estado++;
+					cout << lista.TOP().x->val << " -> ";
+					i.update(lista.TOP().x->nodes[0]);
+					lista.p_push(i);
+					if (!(lista.TOP().x)) {
+						lista.p_pop();
+					}
+				}
+				else if (lista.TOP().estado == 2) {
 					lista.p_pop();
 				}
-			}
-			else if (lista.TOP().estado == 1) {
-				lista.PILA[lista.top].estado++;
-				cout << lista.TOP().x->val;
-				i.update(lista.TOP().x->nodes[0]);
-				lista.p_push(i);
-				if (!(lista.TOP().x)) {
-					lista.p_pop();
-				}
-			}
-			else if (lista.TOP().estado == 2) {
-				lista.p_pop();
-			}
 
+			}
 		}
 	}
-
 };
 
 template<class T, class O>
