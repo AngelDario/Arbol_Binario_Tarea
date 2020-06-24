@@ -4,14 +4,6 @@
 
 using namespace std;
 
-int pow(int a, int b) {
-	int aux = a;
-	for (int i = 0; i < b; i++) {
-		aux = aux * a;
-	}
-	return aux;
-}
-
 struct Cgreater {
 	inline bool operator()(int a, int b) {
 		return a > b;
@@ -29,7 +21,7 @@ class STACK {
 public:
 	int size, top;
 	T* PILA;
-
+	
 	STACK(int _size) : size(_size) {
 		top = -1;
 		PILA = new T[size];
@@ -73,22 +65,16 @@ struct NODE {
 template<class l>
 struct nodeX {
 	int estado;
-	int nivel;
 	NODE<l>* x;
 
-	nodeX() {
-		estado = 0;
-		nivel = 0;
-	}
+	nodeX() {}
 
 	nodeX(NODE<l>* n) {
 		estado = 0;
-		nivel = 0;
 		x = n;
 	}
 
-	void update(NODE<l>* newNODE, int i ) {
-		nivel = i;
+	void update(NODE<l>* newNODE) {
 		estado = 0;
 		x = newNODE;
 	}
@@ -102,15 +88,14 @@ struct nodeX {
 	}
 };
 
+
 template <class T, class O>
 class CTREE {
 public:
 	NODE<T>* m_root;
 	O order;
-	int cantidad;
 
 	CTREE() {
-		cantidad = 0;
 		m_root = 0;
 	}
 
@@ -135,7 +120,6 @@ public:
 			return 0;
 		}
 		*p = new NODE<T>(x);
-		cantidad++;
 		return 1;
 	}
 
@@ -168,7 +152,6 @@ public:
 		}
 		NODE<T>* temp = *p;
 		*p = (*p)->nodes[!(*p)->nodes[0]];
-		cantidad--;
 		delete temp;
 		return 1;
 	}
@@ -176,37 +159,24 @@ public:
 	void inorder() {
 		if (m_root) {
 			STACK<nodeX<T>> lista(100);
-			STACK<nodeX<T>> aux(100);
 			NODE<T>* k = m_root;
 			nodeX<T> i(k);
-			int altura = 0;
 
 			lista.p_push(i);
-			aux.p_push(i);
 			while (lista.top != -1) {
 
 				if (lista.TOP().estado == 0) {
 					lista.PILA[lista.top].estado++;
-					int temp = lista.TOP().nivel;
-					i.update(lista.TOP().x->nodes[0], ++temp);
-					if (lista.TOP().x->nodes[0]) {
-						aux.p_push(i);
-					}
+					i.update(lista.TOP().x->nodes[0]);
 					lista.p_push(i);
-					if (lista.TOP().nivel > altura) {
-						altura++;
-					}
 					if (!(lista.TOP().x)) {
 						lista.p_pop();
 					}
 				}
 				else if (lista.TOP().estado == 1) {
 					lista.PILA[lista.top].estado++;
-					int temp = lista.TOP().nivel;
-					i.update(lista.TOP().x->nodes[1], ++temp);
-					if (lista.TOP().x->nodes[1]) {
-						aux.p_push(i);
-					}
+					cout << lista.TOP().x->val << " -> ";
+					i.update(lista.TOP().x->nodes[1]);
 					lista.p_push(i);
 					if (!(lista.TOP().x)) {
 						lista.p_pop();
@@ -215,42 +185,165 @@ public:
 				else if (lista.TOP().estado == 2) {
 					lista.p_pop();
 				}
-			}
 
-			for (int i = 0; i < altura; i++) {
-				for (int j = 0; j < cantidad; j++) {
-					if (aux.PILA[j].nivel == i) {
-						cout << " " << aux.PILA[j].x->val << " ";
+			}
+		}
+	}
+
+	void preorder() {
+		if (m_root) {
+			STACK<nodeX<T>> lista(100);
+			NODE<T>* k = m_root;
+			nodeX<T> i(k);
+
+			lista.p_push(i);
+
+			while (lista.top != -1) {
+
+				if (lista.TOP().estado == 0) {
+					lista.PILA[lista.top].estado++;
+					cout << lista.TOP().x->val << " -> ";
+					i.update(lista.TOP().x->nodes[0]);
+					lista.p_push(i);
+					if (!(lista.TOP().x)) {
+						lista.p_pop();
 					}
 				}
-				cout << "\n";
-			
+				else if (lista.TOP().estado == 1) {
+					lista.PILA[lista.top].estado++;
+					i.update(lista.TOP().x->nodes[1]);
+					lista.p_push(i);
+					if (!(lista.TOP().x)) {
+						lista.p_pop();
+					}
+				}
+				else if (lista.TOP().estado == 2) {
+					lista.p_pop();
+				}
+
+			}
+		}
+	}
+
+	void postorder() {
+		if (m_root) {
+			STACK<nodeX<T>> lista(100);
+			NODE<T>* k = m_root;
+			nodeX<T> i(k);
+
+			lista.p_push(i);
+			while (lista.top != -1) {
+
+				if (lista.TOP().estado == 0) {
+					lista.PILA[lista.top].estado++;
+					i.update(lista.TOP().x->nodes[0]);
+					lista.p_push(i);
+					if (!(lista.TOP().x)) {
+						lista.p_pop();
+					}
+				}
+				else if (lista.TOP().estado == 1) {
+					lista.PILA[lista.top].estado++;
+					i.update(lista.TOP().x->nodes[1]);
+					lista.p_push(i);
+					if (!(lista.TOP().x)) {
+						lista.p_pop();
+					}
+				}
+				else if (lista.TOP().estado == 2) {
+					cout << lista.TOP().x->val << " -> ";
+					lista.p_pop();
+				}
+
+			}
+		}
+	}
+
+	void reverse() {
+		if (m_root) {
+			STACK<nodeX<T>> lista(100);
+			NODE<T>* k = m_root;
+			nodeX<T> i(k);
+
+			lista.p_push(i);
+
+
+			while (lista.top != -1) {
+
+				if (lista.TOP().estado == 0) {
+					lista.PILA[lista.top].estado++;
+					i.update(lista.TOP().x->nodes[1]);
+					lista.p_push(i);
+					if (!(lista.TOP().x)) {
+						lista.p_pop();
+					}
+				}
+				else if (lista.TOP().estado == 1) {
+					lista.PILA[lista.top].estado++;
+					cout << lista.TOP().x->val << " -> ";
+					i.update(lista.TOP().x->nodes[0]);
+					lista.p_push(i);
+					if (!(lista.TOP().x)) {
+						lista.p_pop();
+					}
+				}
+				else if (lista.TOP().estado == 2) {
+					lista.p_pop();
+				}
+
 			}
 		}
 	}
 };
 
 template<class T, class O>
-void print(CTREE<T, O> arbol) {
+void print(int& x, CTREE<T, O> arbol) {
 
-	cout << "Inorder: \n";
-	arbol.inorder();
-	cout << endl;
+	switch (x) {
+	case 1:
+		cout << "Inorder: \n";
+		arbol.inorder();
+		cout << endl;
+		break;
+	case 2:
+		cout << "Preorder: \n";
+		arbol.preorder();
+		cout << endl;
+		break;
+	case 3:
+		cout << "Postorder: \n";
+		arbol.postorder();
+		cout << endl;
+		break;
+	case 4:
+		cout << "Reverse: \n";
+		arbol.reverse();
+		cout << endl;
+		break;
+	}
 
 }
 
 template<class T, class O>
 void menu(CTREE<T, O>& arbol) {
 	int x;
+	int orden;
 
+	cout << "Escoge que el tipo de recorrido: " << endl;
+	cout << "1. Inorder \n";
+	cout << "2. Preorder \n";
+	cout << "3. Postorder \n";
+	cout << "4. Reverse \n";
+	cin >> orden;
 
 	while (1) {
 		system("cls");
-		print<T, O>(arbol);
+		print<T, O>(orden, arbol);
 		cout << "Que quieres haccer?" << endl;
 		cout << "1. Add \n";
 		cout << "2. Del \n";
-		cout << "3. Salir del Programa\n";
+		cout << "3. Cambiar tipo de recorrido\n";
+		cout << "4. Salir del Programa\n";
 		cin >> x;
 
 		switch (x) {
@@ -266,8 +359,15 @@ void menu(CTREE<T, O>& arbol) {
 			cin >> intTemp2;
 			arbol.remove(intTemp2);
 			continue;
-
 		case 3:
+			cout << "Escoge que el tipo de recorrido: " << endl;
+			cout << "1. Inorder \n";
+			cout << "2. Preorder \n";
+			cout << "3. Postorder \n";
+			cout << "4. Reverse \n";
+			cin >> orden;
+			continue;
+		case 4:
 			arbol.destruir(arbol.m_root);
 			cout << "Arbol Destruido.";
 			exit(0);
